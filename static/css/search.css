@@ -1,0 +1,5 @@
+.book-card {
+    border: 2px solid black;
+    padding: 2px;
+    display: inline-block;
+}

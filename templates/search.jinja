@@ -1,0 +1,67 @@
+{% macro book_card(book_data) %}
+<div class="book-card">
+    Название: <b>{{book_data["title"]}}</b><br>
+    Авторы: <b>{{book_data["authors_name"]}}</b><br>
+    Жанр: <b>{{book_data["genre_name"]}}</b><br>
+    Издательство: <b>{{book_data["publisher_name"]}}</b><br>
+    Год издания: <b>{{book_data["year_publication"]}}</b><br>
+    Количество: <b>{{book_data["available_numbers"]}}</b><br>
+    book_id: <b>{{book_data["book_id"][0]}}</b><br>
+    <form action={{url_for("search_post")}} method="post">
+        <input type="hidden" name="book_id" value={{book_data["book_id"][0]}}>
+        <input type="submit" {{"disabled" if book_data["available_numbers"]==0 else "" }} value="Взять">
+    </form>
+</div>
+{% endmacro %}
+
+{% macro checkbox_list(df, name_field, value_field, selected_values) %}
+{% for name, value in zip(df[name_field].unique(), df[value_field].unique()) %}
+<label>
+    <input type="checkbox" name={{value_field}} value={{value}} {{"checked" if value in selected_values}}>
+    {{name}} ({{df[name_field].value_counts()[name]}})<br>
+</label>
+{% endfor %}
+{% endmacro %}
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="stylesheet" type="text/css" href="/static/css/search.css" />
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+
+<body>
+    <div class="search-box">
+        <form action={{url_for("search")}} method="get">
+            <details>
+                <summary>Жанр</summary>
+                {{checkbox_list(all_books, "genre_name", "genre_id", selected_genres)}}
+            </details>
+
+            <details>
+                <summary>Автор</summary>
+                {{checkbox_list(all_books, "author_name", "author_id", selected_authors)}}
+            </details>
+
+            <details>
+                <summary>Издательство</summary>
+                {{checkbox_list(all_books, "publisher_name", "publisher_id", selected_publishers)}}
+            </details>
+
+            <input type="submit" value="Найти">
+            <input type="submit" name="reset" value="Очистить">
+        </form>
+    </div>
+    <form action={{url_for("index")}} method="get">
+        <input type="submit" value="Не выбирать книгу">
+    </form>
+    {% for i, book_data_row in searched_books.iterrows() %}
+    {{book_card(book_data_row)}}
+    {% endfor %}
+</body>
+
+</html>
