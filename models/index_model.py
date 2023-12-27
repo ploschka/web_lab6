@@ -32,22 +32,6 @@ def get_book_reader(conn, reader_id):
 
 # для обработки данных о новом читателе
 
-
-def get_new_reader(conn, new_reader):
-    cur = conn.cursor()
-    # добавить нового читателя в базу
-    return cur.lastrowid
-
-# для обработки данных о взятой книге
-
-
-def borrow_book(conn, book_id, reader_id):
-    cur = conn.cursor()
-    # добавить взятую книгу (book_id) читателю (reader_id) в таблицу book_reader
-    # указать текущую дату как дату выдачи книги
-    # уменьшить количество экземпляров взятой книги
-    return True
-
 def return_book(conn, book_reader_id):
     cur = conn.cursor()
 

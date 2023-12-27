@@ -15,4 +15,4 @@ def new_reader_post():
     reader_name = request.values.get("reader_name")
     inserted_id = new_reader_model.create_reader(conn, reader_name)
     session["reader_id"] = inserted_id
-    return redirect(url_for("index"))
+    return redirect(url_for("index", new_reader=inserted_id))

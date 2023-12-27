@@ -23,6 +23,14 @@
 {% endfor %}
 {% endmacro %}
 
+{% macro filters(df, name_field, value_field, selected_values) %}
+{% for name, value in zip(df[name_field].unique(), df[value_field].unique()) %}
+{% if value in selected_values %}
+<span>{{ name }}</span> 
+{% endif %}
+{% endfor %}
+{% endmacro %}
+
 
 
 <!DOCTYPE html>
@@ -31,7 +39,7 @@
 <head>
     <link rel="stylesheet" type="text/css" href="/static/css/search.css" />
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>ПОИСК КНИГ</title>
 </head>
 
 <body>
@@ -57,8 +65,14 @@
         </form>
     </div>
     <form action={{url_for("index")}} method="get">
-        <input type="submit" value="Не выбирать книгу">
+        <input type="submit" name="noselect" value="Не выбирать книгу">
     </form>
+    <p>
+        Выбранные фильтры:
+        {{filters(all_books, "genre_name", "genre_id", selected_genres)}}
+        {{filters(all_books, "author_name", "author_id", selected_authors)}}
+        {{filters(all_books, "publisher_name", "publisher_id", selected_publishers)}}
+    </p>
     {% for i, book_data_row in searched_books.iterrows() %}
     {{book_card(book_data_row)}}
     {% endfor %}
